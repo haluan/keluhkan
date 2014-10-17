@@ -3,7 +3,7 @@
 <div class="col-lg-8">
 	<div class="well-lg bg-white">
 		<div>
-			<strong>Oleh: </strong>{{$post->user->name}}
+			<bold class="bg-red">{{$post->nama_perusahaan}}</bold>
 		</div>
 	    <div class="text-center">
 	        <h2>{{ $post->title }}</h2>
@@ -11,9 +11,10 @@
 		<hr>
 		<div>
 			 <strong>Keluhan:</strong> <br>
-			 <blockquote>
+			 <div class="well">
 			 	{{ $post->body }}
-			 </blockquote>
+			 	<strong>Oleh: </strong>{{$post->user->name}}
+			 </div>
 	    </div>
 	</div>
 </div>

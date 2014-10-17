@@ -31,12 +31,20 @@ class UsersController extends \BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = Input::all(), User::$rules);
-		 $user = new User;
+		$rules = array(
+			'password' => 'required|min:3',
+			'email' => 'required|email|unique:users',
+			'name' => 'required|min:5',
+			);
+		$validator = Validator::make($data = Input::all(), $rules);
+		$user = new User;
         $user->name = Input::get('name');
         $user->email = Input::get('email');
         $user->password = Hash::make(Input::get('password'));
         $user->remember_token = str_random(40);
+
+        $image = Input::file('picture');
+        $user->picture = $image;
       
 
 		if ($validator->fails())
@@ -45,6 +53,7 @@ class UsersController extends \BaseController {
 		}
 
 		$user->save();
+		// $user = User::create(Input::all());
 		Mail::queue('users.mail.welcome', array('name'=>Input::get('name')), function($message){
 	        $message->to(Input::get('email'), Input::get('name'))->subject('Selamat Datang di keluhan.com');
 	    });
@@ -87,8 +96,12 @@ class UsersController extends \BaseController {
 	public function update($id)
 	{
 		$user = User::findOrFail($id);
+		$rules = array(
+			'email' => 'required',
+			'name' => 'required|min:5',
+		);
 
-		$validator = Validator::make($data = Input::all(), User::$rules);
+		$validator = Validator::make($data = Input::all(), $rules);
 
 		if ($validator->fails())
 		{

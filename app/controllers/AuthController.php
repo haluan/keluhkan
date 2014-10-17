@@ -121,7 +121,10 @@ protected $layout = 'layouts.master';
 	{
 		//
 		// Log out
-        Auth::logout();
+       
+        Session::flush(); // removes all session data
+         Auth::logout();
+
 
         // Redirect to homepage
         return Redirect::to('')->with('success', 'You are logged out');

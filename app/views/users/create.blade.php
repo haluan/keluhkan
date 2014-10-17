@@ -6,7 +6,7 @@
     <!-- if there are creation errors, they will show here -->
     {{ HTML::ul($errors->all()) }}
 
-    {{ Form::open(array('url' => 'users')) }}
+    {{ Form::open(array('url' => 'users','files' => true)) }}
 
         <div class="form-group">
             {{ Form::label('name', 'Name') }}
@@ -22,9 +22,10 @@
             {{ Form::label('password', 'password') }}
             {{ Form::password('password', array('class' => 'form-control'))}}
         </div>
-
-       
-
+        <div class="form-group">
+            {{ Form::label('picture', 'Picture') }}
+            {{ Form::file('picture', Input::old('picture'), array('class' => 'form-control')) }}
+        </div>
         {{ Form::submit('Daftar', array('class' => 'btn btn-primary')) }}
 
     {{ Form::close() }}

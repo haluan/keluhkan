@@ -44,9 +44,18 @@ class PostsController extends \BaseController {
 		                 ->where('users.name', 'LIKE', '%'.Input::get('search').'%')
 		                 ->orwhere('body', 'LIKE', '%'.Input::get('search').'%')
 		                 ->orwhere('title', 'LIKE', '%'.Input::get('search').'%');
-		        })->groupBy('posts.id')->get();
+		        })->orderBy('posts.created_at', 'desc')->groupBy('posts.id')
+		->select('posts.id', 'posts.title', 'posts.user_id', 'posts.body', 'posts.picture_file_name', 'posts.nama_perusahaan')
+		->get();
+		// $posts = Post::where('posts.title', 'LIKE', '%'.Input::get('search').'%')->get();
 		$term = Input::get('search');
 		return View::make('posts.search', compact('posts', 'term'));
+	}
+
+	public function search_by_date(){
+		$date = Input::get('selected_date');
+		$posts = Post::where('created_at', 'like', '%'.$date.'%')->orderBy('created_at', 'desc')->get();
+		return View::make('hello', compact('posts', 'date'));
 	}
 
 	/**
@@ -56,18 +65,20 @@ class PostsController extends \BaseController {
 	 */
 	public function store()
 	{
+		
 		$validator = Validator::make($data = Input::all(), Post::$rules);
-		$post = new Post;
-        $post->title = Input::get('title');
-        $post->body = Input::get('body');
-        $post->user_id = Auth::user()->id;
+		// $post = new Post;
+  //       $post->title = Input::get('title');
+  //       $post->body = Input::get('body');
+  //       $post->picture = Input::get('picture');
+  //       $post->user_id = Auth::user()->id;
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$post->save();
+		 $post = Post::create(Input::all()); 
 
 		return Redirect::route('posts.index');
 	}
